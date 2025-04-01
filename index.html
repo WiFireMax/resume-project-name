@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @font-face {
+            font-family: 'Noto Sans';
+            src: url('NotoSans-VariableFont_wdth,wght.ttf') format('truetype');
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <h1>Resume</h1>
+    </header>
+
+    <div class="container">
+        <div class="resume">
+            <header class="resume-header">
+                <h2 contenteditable="true" data-placeholder="Введите ваше ФИО"></h2>
+                <p class="description" contenteditable="true" data-placeholder="Краткое описание о вас">
+                    
+                </p>
+            </header>
+
+            <div class="resume-section">
+                <h2>Contacts 📞</h2>
+                <p contenteditable="true" data-placeholder="Введите ваш email"></p>
+                <p contenteditable="true" data-placeholder="Введите ваш телефон"></p>
+            </div>
+
+            <div class="resume-section">
+                <h2>Work experience 💼</h2>
+                <p contenteditable="true" data-placeholder="Укажите ваш опыт работы"></p>
+            </div>
+
+            <div class="resume-section">
+                <h2>Education 🎓</h2>
+                <p contenteditable="true" data-placeholder="Где вы учились">
+                    
+                </p>
+            </div>
+
+            <div class="resume-section">
+                <h2>Skills 🚀</h2>
+                <ul>
+                    <li contenteditable="true" data-placeholder="Введите навык"></li>
+                    <li contenteditable="true" data-placeholder="Введите навык"></li>
+                    <li contenteditable="true" data-placeholder="Введите навык"></li>
+                </ul>
+            </div>
+
+            <button id="download-pdf">📄 Download PDF</button>
+        </div>
+    </div>
+
+    <!-- Подключение jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
