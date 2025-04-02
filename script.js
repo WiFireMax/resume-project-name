@@ -48,83 +48,82 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Функция для генерации PDF
     document.getElementById("download-pdf").addEventListener("click", function () {
-        try {
-            const doc = new jsPDF({
-                orientation: "portrait",
-                unit: "mm",
-                format: "a4"
-            });
+    try {
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
 
-            // Установка шрифта по умолчанию
-            doc.setFont("helvetica");
-            doc.setFontSize(12);
+        // Устанавливаем стандартный шрифт с поддержкой кириллицы
+        doc.setFont("helvetica");
+        doc.setFontSize(12);
 
-            let y = 20;
-            const margin = 15;
-            const pageWidth = doc.internal.pageSize.getWidth() - 2 * margin;
+        let y = 20;
+        const margin = 15;
+        const pageWidth = doc.internal.pageSize.getWidth() - 2 * margin;
+
+        // Функция для корректного добавления текста
+        function addText(text, fontSize = 12, isBold = false, isHeader = false) {
+            if (!text || !text.trim()) return y;
             
-            // Собираем все элементы для печати
-            const elements = document.querySelectorAll("h1, h2, p, li");
+            doc.setFontSize(fontSize);
+            doc.setFont("helvetica", isBold ? "bold" : "normal");
             
-            // Добавляем заголовок
-            doc.setFontSize(22);
-            doc.setFont("helvetica", "bold");
-            const title = document.querySelector(".resume-header h2").textContent || "Резюме";
-            doc.text(title, margin, y);
-            y += 15;
+            // Заменяем проблемные символы
+            const cleanText = text
+                .replace(/📞/g, '(phone)')
+                .replace(/💼/g, '(briefcase)')
+                .replace(/🎓/g, '(graduation cap)')
+                .replace(/🚀/g, '(rocket)');
             
-            // Описание
-            doc.setFontSize(14);
-            doc.setFont("helvetica", "normal");
-            const description = document.querySelector(".resume-header .description").textContent;
-            if (description.trim()) {
-                const descLines = doc.splitTextToSize(description, pageWidth);
-                doc.text(descLines, margin, y);
-                y += descLines.length * 7 + 10;
+            const lines = doc.splitTextToSize(cleanText, pageWidth);
+            
+            // Проверка на переполнение страницы
+            const lineHeight = fontSize * 0.35;
+            const neededSpace = lines.length * lineHeight + (isHeader ? 10 : 5);
+            
+            if (y + neededSpace > doc.internal.pageSize.getHeight() - 20) {
+                doc.addPage();
+                y = 20;
             }
-
-            // Остальные секции
-            doc.setFontSize(12);
             
-            elements.forEach(element => {
-                if (element.closest(".resume-header")) return;
-                
-                let fontSize = 12;
-                let fontStyle = "normal";
-                let text = element.textContent.trim();
-                
-                if (!text) return;
-                
-                if (element.tagName === 'H2') {
-                    fontSize = 16;
-                    fontStyle = "bold";
-                    y += 10; // Добавляем отступ перед заголовком
-                } else if (element.tagName === 'LI') {
-                    text = '• ' + text;
-                }
-                
-                doc.setFontSize(fontSize);
-                doc.setFont("helvetica", fontStyle);
-                
-                const lines = doc.splitTextToSize(text, pageWidth);
-                
-                // Проверка на переполнение страницы
-                const neededSpace = lines.length * 7 + 5;
-                if (y + neededSpace > doc.internal.pageSize.getHeight() - 20) {
-                    doc.addPage();
-                    y = 20;
-                }
-                
-                doc.text(lines, margin, y);
-                y += lines.length * 7 + 5;
-            });
-
-            doc.save("resume.pdf");
-        } catch (error) {
-            console.error("Ошибка генерации PDF:", error);
-            alert("Произошла ошибка при генерации PDF. Пожалуйста, попробуйте снова.");
+            if (isHeader) {
+                y += 10;
+                doc.setTextColor(0, 0, 0);
+            }
+            
+            doc.text(lines, margin, y);
+            y += lines.length * lineHeight + (isHeader ? 10 : 5);
+            
+            return y;
         }
-    });
+
+        // Добавляем заголовок
+        const title = document.querySelector(".resume-header h2").textContent || "Резюме";
+        y = addText(title, 22, true, true);
+        
+        // Описание
+        const description = document.querySelector(".resume-header .description").textContent;
+        y = addText(description, 14, false, false);
+
+        // Обрабатываем все секции
+        document.querySelectorAll(".resume-section").forEach(section => {
+            const title = section.querySelector("h2").textContent;
+            y = addText(title, 16, true, true);
+            
+            section.querySelectorAll("p, li").forEach(element => {
+                const isListItem = element.tagName === 'LI';
+                y = addText(element.textContent, 12, false, false);
+            });
+        });
+
+        doc.save("resume.pdf");
+    } catch (error) {
+        console.error("Ошибка генерации PDF:", error);
+        alert("Произошла ошибка при генерации PDF: " + error.message);
+    }
+});
 
     // Эффект Ripple для кнопки
     document.querySelectorAll("button").forEach(button => {
