@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         // Добавляем заголовок
-        const title = document.querySelector(".resume-header h2").textContent || "Резюме";
+        const title = document.querySelector(".resume-header h2").textContent || "Resume";
         y = addText(title, 22, true, true);
         
         // Описание
