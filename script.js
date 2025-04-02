@@ -70,13 +70,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             doc.setFontSize(fontSize);
             doc.setFont("helvetica", isBold ? "bold" : "normal");
             
-            // Заменяем проблемные символы
-            const cleanText = text
-                .replace(/📞/g, '(phone)')
-                .replace(/💼/g, '(briefcase)')
-                .replace(/🎓/g, '(graduation cap)')
-                .replace(/🚀/g, '(rocket)');
-            
             const lines = doc.splitTextToSize(cleanText, pageWidth);
             
             // Проверка на переполнение страницы
