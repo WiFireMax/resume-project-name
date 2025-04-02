@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             doc.setFontSize(fontSize);
             doc.setFont("helvetica", isBold ? "bold" : "normal");
             
-            const lines = doc.splitTextToSize(text, pageWidth);
+            const lines = doc.splitTextToSize(text.trim(), pageWidth);
             
             // Проверка на переполнение страницы
             const lineHeight = fontSize * 0.35;
